@@ -1,0 +1,11 @@
+[tool.poetry]
+name = "que-hijos-de-diputados"
+version = "0.1.0"
+description = "Reconocimiento facial en videos de youtube"
+authors = ["Ezequiel Gresia"]
+license = "MIT"
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
