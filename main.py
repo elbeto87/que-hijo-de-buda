@@ -1,16 +1,10 @@
-# This is a sample Python script.
+import os
+from logger import logger
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+from youtube_downloader import download_videos
 
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    if not os.path.isfile("/home/elbeto87/Desktop/projects/que-hijo-de-buda/milei.mp4"):
+        download_videos("https://www.youtube.com/watch?v=ij5_1zfmhOg")
+    logger.info("Video has been already downloaded")
