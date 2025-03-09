@@ -70,35 +70,39 @@ def recognize_faces(duration: int = 30):
         boxes, _ = mtcnn.detect(rgb_frame)
 
         if boxes is not None:
-            for box in boxes:
-                x1, y1, x2, y2 = map(int, box)
-                face_rgb = rgb_frame[y1:y2, x1:x2]
+            try:
+                for box in boxes:
+                    x1, y1, x2, y2 = map(int, box)
+                    face_rgb = rgb_frame[y1:y2, x1:x2]
 
-                if face_rgb.size == 0:
-                    continue
+                    if face_rgb.size == 0:
+                        continue
 
-                # Convert the face to a tensor and normalize
-                face = torch.tensor(face_rgb, dtype=torch.float32).permute(2, 0, 1) / 255.0
-                face = face.unsqueeze(0)
+                    # Convert the face to a tensor and normalize
+                    face = torch.tensor(face_rgb, dtype=torch.float32).permute(2, 0, 1) / 255.0
+                    face = face.unsqueeze(0)
 
-                # Extract the embedding
-                with torch.no_grad():
-                    face_embedding = resnet(face)
+                    # Extract the embedding
+                    with torch.no_grad():
+                        face_embedding = resnet(face)
 
-                similarities = [cosine_similarity(face_embedding, milei_emb) for milei_emb in milei_embeddings]
-                max_similarity = max(similarities)
-                percentage = max_similarity[0, 0] * 100
+                    similarities = [cosine_similarity(face_embedding, milei_emb) for milei_emb in milei_embeddings]
+                    max_similarity = max(similarities)
+                    percentage = max_similarity[0, 0] * 100
 
-                if max_similarity > 0.6:
-                    label = f"Milei is detected ({percentage:.2f}%)"
-                    color = (0, 255, 0)
-                    label += face_emotions(face_rgb)
-                else:
-                    label = f"Unknown ({percentage:.2f}%)"
-                    color = (0, 0, 255)
+                    if max_similarity > 0.6:
+                        label = f"Target Person Detected ({percentage:.2f}%)"
+                        color = (0, 255, 0)
+                        label = face_emotions(face_rgb)
+                    else:
+                        label = f"No Target Person ({percentage:.2f}%)"
+                        color = (0, 0, 255)
 
-                cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
-                cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+                    cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
+                    cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+            except RuntimeError as e:
+                logger.error(e)
+                continue
 
         cv2.imshow("Face Recognition", frame)
 
