@@ -3,9 +3,11 @@ import os
 import cv2
 import torch
 import numpy as np
+from moviepy import VideoFileClip, AudioFileClip
+
+from constants import DATASET, INPUT_VIDEO, PROCESS_VIDEO, RESOURCES_FOLDER
 from emotions import face_emotions
 from facenet_pytorch import MTCNN, InceptionResnetV1
-from deepface import DeepFace
 from logger import logger
 
 
@@ -13,7 +15,7 @@ mtcnn = MTCNN(keep_all=True, device='cpu')
 resnet = InceptionResnetV1(pretrained='vggface2').eval()
 
 
-def load_person_dataset(dataset_path: str = "./dataset/milei"):
+def load_person_dataset(dataset_path: str = DATASET):
     embeddings = []
     for file in os.listdir(dataset_path):
         try:
@@ -42,9 +44,8 @@ def cosine_similarity(embedding1, embedding2):
     return np.dot(embedding1, embedding2.T) / (np.linalg.norm(embedding1) * np.linalg.norm(embedding2))
 
 
-def recognize_faces(duration: int = 30):
-
-    cap = cv2.VideoCapture('milei.mp4')
+def emotions_detector(duration: int, video_path: str = INPUT_VIDEO):
+    cap = cv2.VideoCapture(RESOURCES_FOLDER+video_path)
     milei_embeddings = load_person_dataset()
 
     # Obtain the video properties
@@ -58,7 +59,7 @@ def recognize_faces(duration: int = 30):
 
     # Define the codec and create VideoWriter object
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    output_video = cv2.VideoWriter('milei_analysis.mp4', fourcc, fps, (frame_width, frame_height))
+    output_video = cv2.VideoWriter(RESOURCES_FOLDER+PROCESS_VIDEO, fourcc, fps, (frame_width, frame_height))
 
     while True and frame_count < frame_limit:
         ret, frame = cap.read()
@@ -93,7 +94,7 @@ def recognize_faces(duration: int = 30):
                     if max_similarity > 0.6:
                         label = f"Target Person Detected ({percentage:.2f}%)"
                         color = (0, 255, 0)
-                        label = face_emotions(face_rgb)
+                        label += face_emotions(face_rgb)
                     else:
                         label = f"No Target Person ({percentage:.2f}%)"
                         color = (0, 0, 255)
@@ -117,4 +118,3 @@ def recognize_faces(duration: int = 30):
 
     cap.release()
     cv2.destroyAllWindows()
-
