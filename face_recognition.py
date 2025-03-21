@@ -3,7 +3,6 @@ import os
 import cv2
 import torch
 import numpy as np
-from moviepy import VideoFileClip, AudioFileClip
 
 from constants import DATASET, INPUT_VIDEO, PROCESS_VIDEO, RESOURCES_FOLDER
 from emotions import face_emotions
@@ -54,14 +53,14 @@ def emotions_detector(duration: int, video_path: str = INPUT_VIDEO):
     frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
     # Duration
-    frame_limit = fps * duration
+    frame_limit = fps * (duration or 0)
     frame_count = 0
 
     # Define the codec and create VideoWriter object
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     output_video = cv2.VideoWriter(RESOURCES_FOLDER+PROCESS_VIDEO, fourcc, fps, (frame_width, frame_height))
 
-    while True and frame_count < frame_limit:
+    while True and (not duration or frame_count < frame_limit):
         ret, frame = cap.read()
         if not ret:
             break
@@ -101,18 +100,20 @@ def emotions_detector(duration: int, video_path: str = INPUT_VIDEO):
 
                     cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
                     cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+
+                output_video.write(frame)
+
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
+
+                cv2.imshow("Face Recognition", frame)
+
             except RuntimeError as e:
-                logger.error(e)
+                logger.error(f"RuntimeError: {e}")
                 continue
 
-        cv2.imshow("Face Recognition", frame)
-
-        output_video.write(frame)
-
-        frame_count += 1
-
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+            finally:
+                frame_count += 1
 
     output_video.release()
 

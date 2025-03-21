@@ -1,4 +1,5 @@
 import os
+import argparse
 
 from face_recognition import emotions_detector
 from logger import logger
@@ -8,9 +9,11 @@ from youtube_downloader import download_videos
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--duration", type=int, default=None, help="Tiempo de duración del video")
+    args = parser.parse_args()
     if not os.path.isfile("/home/elbeto87/Desktop/projects/que-hijo-de-buda/resources/milei.mp4"):
         download_videos("https://www.youtube.com/watch?v=ij5_1zfmhOg")
     logger.info("Video has been already downloaded")
-    duration=10
-    emotions_detector(duration=duration)
-    save_process_video(duration=duration)
+    emotions_detector(duration=args.duration)
+    save_process_video(duration=args.duration)
