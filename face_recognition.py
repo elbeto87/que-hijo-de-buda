@@ -48,10 +48,10 @@ def emotions_detector(duration: int, video_path: str = INPUT_VIDEO):
     milei_embeddings = load_person_dataset()
 
     # Obtain the video properties
-    fps = int(cap.get(cv2.CAP_PROP_FPS))
+    fps = float(cap.get(cv2.CAP_PROP_FPS))
 
-    frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    frame_width = float(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    frame_height = float(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
     # Duration
     frame_limit = fps * (duration or 0)
@@ -108,8 +108,6 @@ def emotions_detector(duration: int, video_path: str = INPUT_VIDEO):
                     cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
                     cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
-                output_video.write(frame)
-
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
 
@@ -118,6 +116,10 @@ def emotions_detector(duration: int, video_path: str = INPUT_VIDEO):
         except RuntimeError as e:
             logger.error(f"RuntimeError: {e}")
             continue
+
+        finally:
+            output_video.write(frame)
+
 
     output_video.release()
 
