@@ -49,6 +49,7 @@ def emotions_detector(duration: int, video_path: str = INPUT_VIDEO):
 
     # Obtain the video properties
     fps = int(cap.get(cv2.CAP_PROP_FPS))
+
     frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
@@ -61,22 +62,28 @@ def emotions_detector(duration: int, video_path: str = INPUT_VIDEO):
     output_video = cv2.VideoWriter(RESOURCES_FOLDER+PROCESS_VIDEO, fourcc, fps, (frame_width, frame_height))
 
     while True and (not duration or frame_count < frame_limit):
-        ret, frame = cap.read()
-        if not ret:
-            break
+        try:
+            logger.info(f"Frame count: {frame_count}")
+            frame_count += 1
 
-        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            ret, frame = cap.read()
+            if not ret:
+                break
 
-        boxes, _ = mtcnn.detect(rgb_frame)
+            rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-        if boxes is not None:
-            try:
+            boxes, _ = mtcnn.detect(rgb_frame)
+
+            if boxes is not None:
                 for box in boxes:
                     x1, y1, x2, y2 = map(int, box)
                     face_rgb = rgb_frame[y1:y2, x1:x2]
 
                     if face_rgb.size == 0:
                         continue
+
+                    if face_rgb.shape[0] < 160 or face_rgb.shape[1] < 160:
+                        face_rgb = cv2.resize(face_rgb, (160, 160))
 
                     # Convert the face to a tensor and normalize
                     face = torch.tensor(face_rgb, dtype=torch.float32).permute(2, 0, 1) / 255.0
@@ -108,12 +115,9 @@ def emotions_detector(duration: int, video_path: str = INPUT_VIDEO):
 
                 cv2.imshow("Face Recognition", frame)
 
-            except RuntimeError as e:
-                logger.error(f"RuntimeError: {e}")
-                continue
-
-            finally:
-                frame_count += 1
+        except RuntimeError as e:
+            logger.error(f"RuntimeError: {e}")
+            continue
 
     output_video.release()
 
