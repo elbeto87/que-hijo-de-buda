@@ -3,7 +3,7 @@ import argparse
 
 from face_recognition import emotions_detector
 from logger import logger
-from save_process_video import save_process_video
+from multimedia_handler import save_process_video, save_original_audio_and_transcription, remove_temporary_files
 
 from youtube_downloader import download_video
 
@@ -16,5 +16,7 @@ if __name__ == '__main__':
     if not os.path.isfile("/home/elbeto87/Desktop/projects/que-hijo-de-buda/resources/video_to_analyze.mp4"):
         download_video(args.youtube_link)
     logger.info("Video has been already downloaded")
+    save_original_audio_and_transcription(duration=args.duration)
     emotions_detector(duration=args.duration)
-    save_process_video(duration=args.duration)
+    save_process_video()
+    remove_temporary_files()

@@ -97,12 +97,12 @@ def emotions_detector(duration: int, video_path: str = INPUT_VIDEO):
                     percentage = max_similarity[0, 0] * 100
 
                     if max_similarity > 0.6:
-                        logger.info(f"Target Person Detected ({percentage:.2f}%)")
+                        logger.info(f"Frame {frame_count} - Target Person Detected ({percentage:.2f}%)")
                         label = f"Target Person Detected ({percentage:.2f}%)"
                         color = (0, 255, 0)
                         label += face_emotions(face_rgb)
                     else:
-                        logger.info(f"No Target Person Detected ({percentage:.2f}%)")
+                        logger.info(f"Frame {frame_count} - No Target Person Detected ({percentage:.2f}%)")
                         label = f"No Target Person ({percentage:.2f}%)"
                         color = (0, 0, 255)
 
@@ -115,7 +115,7 @@ def emotions_detector(duration: int, video_path: str = INPUT_VIDEO):
                 cv2.imshow("Face Recognition", frame)
 
         except RuntimeError as e:
-            logger.error(f"RuntimeError: {e}")
+            logger.error(f"Frame {frame_count} - RuntimeError: {e}")
             continue
 
         finally:
