@@ -50,8 +50,8 @@ def emotions_detector(duration: int, video_path: str = INPUT_VIDEO):
     # Obtain the video properties
     fps = float(cap.get(cv2.CAP_PROP_FPS))
 
-    frame_width = float(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    frame_height = float(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
     # Duration
     frame_limit = fps * (duration or 0)
@@ -63,7 +63,6 @@ def emotions_detector(duration: int, video_path: str = INPUT_VIDEO):
 
     while True and (not duration or frame_count < frame_limit):
         try:
-            logger.info(f"Frame count: {frame_count}")
             frame_count += 1
 
             ret, frame = cap.read()
@@ -98,10 +97,12 @@ def emotions_detector(duration: int, video_path: str = INPUT_VIDEO):
                     percentage = max_similarity[0, 0] * 100
 
                     if max_similarity > 0.6:
+                        logger.info(f"Target Person Detected ({percentage:.2f}%)")
                         label = f"Target Person Detected ({percentage:.2f}%)"
                         color = (0, 255, 0)
                         label += face_emotions(face_rgb)
                     else:
+                        logger.info(f"No Target Person Detected ({percentage:.2f}%)")
                         label = f"No Target Person ({percentage:.2f}%)"
                         color = (0, 0, 255)
 
