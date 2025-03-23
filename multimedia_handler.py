@@ -4,29 +4,33 @@ import os
 from moviepy.video.io.VideoFileClip import VideoFileClip
 from moviepy.audio.io.AudioFileClip import AudioFileClip
 
-from constants import INPUT_VIDEO, PROCESS_VIDEO, RESOURCES_FOLDER
+from constants import (
+    RESOURCES_FOLDER,
+    INPUT_VIDEO_PATH,
+    TMP_AUDIO_PATH,
+    TMP_AUDIO_CLIPPED_PATH,
+    OUTPUT_VIDEO_PATH,
+    OUTPUT_VIDEO_WITH_AUDIO_PATH
+)
 from logger import logger
 
 
 def save_original_audio_and_transcription(duration):
-    original_video = VideoFileClip(RESOURCES_FOLDER + INPUT_VIDEO)
-    tmp_audio_path = "tmp_audio_" + INPUT_VIDEO
-    tmp_audio_path_clipped = "tmp_audio_clipped_" + INPUT_VIDEO
-    original_video.audio.write_audiofile(RESOURCES_FOLDER + tmp_audio_path, codec="mp3")
-    audio_clip = AudioFileClip(RESOURCES_FOLDER + tmp_audio_path)
+    original_video = VideoFileClip(INPUT_VIDEO_PATH)
+    original_video.audio.write_audiofile(TMP_AUDIO_PATH, codec="mp3")
+    audio_clip = AudioFileClip(TMP_AUDIO_PATH)
     logger.info(f"Audio duration: {audio_clip.duration}")
     audio_clipped = audio_clip.subclipped(start_time=0, end_time=duration)
-    audio_clipped.write_audiofile(RESOURCES_FOLDER + tmp_audio_path_clipped, codec="mp3")
+    audio_clipped.write_audiofile(TMP_AUDIO_CLIPPED_PATH, codec="mp3")
 
 
-def save_process_video(output_video: str = PROCESS_VIDEO):
-    video_with_analysis = VideoFileClip(RESOURCES_FOLDER + output_video)
-    process_video_with_audio = "processed_with_audio_" + output_video
+def save_process_video():
+    video_with_analysis = VideoFileClip(OUTPUT_VIDEO_PATH)
     video_with_analysis.write_videofile(
-        RESOURCES_FOLDER + process_video_with_audio,
+        OUTPUT_VIDEO_WITH_AUDIO_PATH,
         codec="libx264",
         fps=video_with_analysis.fps,
-        audio=RESOURCES_FOLDER+"tmp_audio_clipped_"+INPUT_VIDEO,
+        audio=TMP_AUDIO_CLIPPED_PATH,
         audio_codec="aac"
     )
 

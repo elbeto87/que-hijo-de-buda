@@ -4,7 +4,7 @@ import cv2
 import torch
 import numpy as np
 
-from constants import DATASET, INPUT_VIDEO, PROCESS_VIDEO, RESOURCES_FOLDER
+from constants import DATASET, INPUT_VIDEO, RESOURCES_FOLDER, OUTPUT_PROCESSED_VIDEO_PATH
 from emotions import face_emotions
 from facenet_pytorch import MTCNN, InceptionResnetV1
 from logger import logger
@@ -59,7 +59,7 @@ def emotions_detector(duration: int, video_path: str = INPUT_VIDEO):
 
     # Define the codec and create VideoWriter object
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    output_video = cv2.VideoWriter(RESOURCES_FOLDER+PROCESS_VIDEO, fourcc, fps, (frame_width, frame_height))
+    output_video = cv2.VideoWriter(OUTPUT_PROCESSED_VIDEO_PATH, fourcc, fps, (frame_width, frame_height))
 
     while True and (not duration or frame_count < frame_limit):
         try:
