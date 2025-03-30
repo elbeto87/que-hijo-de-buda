@@ -3,10 +3,19 @@ import argparse
 
 from face_recognition import emotions_detector
 from logger import logger
-from multimedia_handler import save_process_video, save_original_audio_and_transcription, remove_temporary_files
+from multimedia_handler import (
+    save_process_video,
+    save_original_audio_and_transcription,
+    remove_temporary_files,
+    audio_transcription_to_text,
+)
 
 from youtube_downloader import download_video
 
+
+GLOBAL_CONTEXT = {
+    "audio_transcription": None
+}
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -17,6 +26,7 @@ if __name__ == '__main__':
         download_video(args.youtube_link)
     logger.info("Video has been already downloaded")
     save_original_audio_and_transcription(duration=args.duration)
+    GLOBAL_CONTEXT["audio_transcription"] = audio_transcription_to_text()
     emotions_detector(duration=args.duration)
     save_process_video()
     remove_temporary_files()

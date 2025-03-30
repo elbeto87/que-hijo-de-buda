@@ -1,6 +1,8 @@
 import glob
 import os
 
+import whisper
+
 from moviepy.video.io.VideoFileClip import VideoFileClip
 from moviepy.audio.io.AudioFileClip import AudioFileClip
 
@@ -22,6 +24,12 @@ def save_original_audio_and_transcription(duration):
     logger.info(f"Audio duration: {audio_clip.duration}")
     audio_clipped = audio_clip.subclipped(start_time=0, end_time=duration)
     audio_clipped.write_audiofile(TMP_AUDIO_CLIPPED_PATH, codec="mp3")
+
+
+def audio_transcription_to_text():
+    logger.info("Processing audio transcription")
+    model = whisper.load_model("base")
+    return model.transcribe(TMP_AUDIO_CLIPPED_PATH)
 
 
 def save_process_video():
