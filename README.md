@@ -8,18 +8,14 @@ This project utilizes Artificial Intelligence (AI) to perform facial recognition
 
 - **Facial Recognition**: Identifies and verifies individuals based on facial features.
 - **Lie Detection**: Analyzes microexpressions, eye movement, and other non-verbal cues to detect potential deception.
-- **Real-time Processing**: Uses advanced AI models for real-time video analysis.
-- **Cross-platform Compatibility**: Can be used on Windows, macOS, and Linux.
-- **User-Friendly Interface**: Simple and intuitive UI for seamless user experience.
 
 ## Technologies Used
 
 - **Python**
 - **OpenCV** (for image processing)
-- **TensorFlow/Keras** (for deep learning models)
-- **Dlib** (for facial landmark detection)
-- **MediaPipe** (for facial tracking)
-- **Flask/FastAPI** (for API development)
+- **TensorFlow** (for deep learning models)
+- **DeepFace** (for facial analysis)
+- **Whisper** (for audio processing)
 
 ## Installation
 
@@ -27,29 +23,27 @@ This project utilizes Artificial Intelligence (AI) to perform facial recognition
 
 Ensure you have the following installed:
 
-- Python 3.8+
-- pip
+- Python 3.12+
 
 ### Setup
 
 ```sh
 # Clone the repository
-git clone https://github.com/yourusername/facial-ai-lie-detector.git
-cd facial-ai-lie-detector
+git clone https://github.com/elbeto87/que-hijo-de-buda.git
+cd que-hijo-de-buda
 
 # Install dependencies
-pip install -r requirements.txt
+poetry install
 
 # Run the application
-python main.py
+python main https://<YOUTUBE_LINK>
 ```
 
 ## Usage
 
-1. Start the application.
-2. Upload or enable the webcam for facial recognition.
-3. The system will analyze facial expressions and predict deception likelihood.
-4. Results will be displayed in real-time.
+1. Start the application by running the `main.py` script.
+2. Provide the YouTube link of the video you want to analyze.
+3. The application will process the video and display the results.
 
 ## Demo Video
 
@@ -65,5 +59,5 @@ Contributions are welcome! Please open an issue or submit a pull request for imp
 
 ## Contact
 
-For any inquiries, reach out via [your.email@example.com](mailto:your.email@example.com).
+For any inquiries, reach out via [gresia.ezequiel@gmail.com](mailto:gresia.ezequiel@gmail.com).
 
