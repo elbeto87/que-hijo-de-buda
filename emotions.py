@@ -15,4 +15,4 @@ def face_emotions(face: np.ndarray) -> str | None:
         return f" | Mood: {emotion}"
     except Exception as e:
         logger.error(f"Error analyzing emotion: {e}")
-        return f" | Mood: Unknown"
+        return " | Mood: Unknown"

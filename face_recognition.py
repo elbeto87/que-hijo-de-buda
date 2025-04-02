@@ -60,7 +60,7 @@ def emotions_detector(duration: int, video_path: str = INPUT_VIDEO):
     # Define the codec and create VideoWriter object
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     output_video = cv2.VideoWriter(OUTPUT_PROCESSED_VIDEO_PATH, fourcc, fps, (frame_width, frame_height))
-    
+
     while True and (not duration or frame_count < frame_limit):
         try:
             frame_count += 1
@@ -121,8 +121,6 @@ def emotions_detector(duration: int, video_path: str = INPUT_VIDEO):
         finally:
             output_video.write(frame)
 
-
     output_video.release()
-
     cap.release()
     cv2.destroyAllWindows()
