@@ -43,7 +43,7 @@ def cosine_similarity(embedding1, embedding2):
     return np.dot(embedding1, embedding2.T) / (np.linalg.norm(embedding1) * np.linalg.norm(embedding2))
 
 
-def emotions_detector(duration: int, video_path: str = INPUT_VIDEO):
+def emotions_detector(duration: int, topics: list, video_path: str = INPUT_VIDEO):
     cap = cv2.VideoCapture(RESOURCES_FOLDER+video_path)
     milei_embeddings = load_person_dataset()
 
@@ -64,13 +64,14 @@ def emotions_detector(duration: int, video_path: str = INPUT_VIDEO):
     while True and (not duration or frame_count < frame_limit):
         try:
             frame_count += 1
-
+            seconds_of_video = int(frame_count / fps)
             ret, frame = cap.read()
             if not ret:
                 break
 
             rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
+            cv2.putText(frame, f"Topic: {topics[0]['topic']}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
+            cv2.putText(frame, f"{seconds_of_video} seconds", (10, frame.shape[0] - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 0), 2)
             boxes, _ = mtcnn.detect(rgb_frame)
 
             if boxes is not None:
