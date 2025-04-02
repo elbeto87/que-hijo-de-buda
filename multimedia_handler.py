@@ -47,15 +47,21 @@ class MultimediaHandler:
         for file in temp_files:
             os.remove(file)
 
-    @staticmethod
-    # TODO: Implement OpenAI based on the segments of the text
-    def get_topics_from_text(audio_transcription: dict):
+    def get_topics(self, audio_transcription: dict):
         segments = [{"start": s["start"], "end": s["end"], "text": s["text"]} for s in audio_transcription["segments"]] # noqa
-        return [
-            {"start_time": "0:00", "end_time": "0:38", "topic": "Relación con Colombia y Gustavo Petro"},
-            {"start_time": "0:38", "end_time": "0:41", "topic": "Opinión sobre Nicolás Maduro"},
-            {"start_time": "0:41", "end_time": "0:58", "topic": "Reconocimiento del candidato en Venezuela"}
-        ]
+        return self.get_topics_from_segments(segments)["topics"]
+
+    def get_topics_from_segments(self, segments: list): # noqa
+        # TODO: Implement OpenAI based on the segments of the text
+        return {
+            "video_duration": "02:37",
+            "number_of_topics": 3,
+            "topics": [
+                {"start_time": "00:00", "end_time": "00:37", "topic": "Relaciones con Colombia y Venezuela"},
+                {"start_time": "00:38", "end_time": "01:34", "topic": "Posicionamiento sobre Estados Unidos e Israel"},
+                {"start_time": "01:35", "end_time": "02:37", "topic": "El Papa Francisco y cierre del reportaje"}
+            ]
+        }
 
     def download_video(self):
         logger.info("Downloading videos")
