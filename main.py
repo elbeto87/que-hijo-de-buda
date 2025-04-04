@@ -1,6 +1,6 @@
 import argparse
 
-from video_analysis import VideoAnalysis
+from analysis.video_analysis import VideoAnalysis
 
 
 if __name__ == '__main__':

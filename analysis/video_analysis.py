@@ -1,8 +1,5 @@
-from collections import defaultdict
-from pydoc_data.topics import topics
-
-from face_recognition import emotions_detector
-from multimedia_handler import MultimediaHandler
+from analysis.face_recognition import emotions_detector
+from utils.multimedia_handler import MultimediaHandler
 
 
 class VideoAnalysis:

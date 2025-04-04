@@ -74,7 +74,7 @@ class MultimediaHandler:
 
     def check_if_video_already_downloaded(self):
         logger.info("Check if video already downloaded")
-        if not os.path.isfile("./resources/video_to_analyze.mp4"):
+        if not os.path.isfile("../resources/video_to_analyze.mp4"):
             self.download_video()
         logger.info("Video has been already downloaded")
 

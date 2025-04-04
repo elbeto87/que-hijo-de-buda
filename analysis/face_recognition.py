@@ -5,10 +5,10 @@ import torch
 import numpy as np
 
 from constants import DATASET, INPUT_VIDEO, RESOURCES_FOLDER, OUTPUT_PROCESSED_VIDEO_PATH
-from emotions import face_emotions
+from analysis.emotions import face_emotions
 from facenet_pytorch import MTCNN, InceptionResnetV1
 from logger import logger
-from time_modifiers import format_time, to_seconds, get_new_topic
+from utils.time_modifiers import format_time, get_new_topic
 
 mtcnn = MTCNN(keep_all=True, device='cpu')
 resnet = InceptionResnetV1(pretrained='vggface2').eval()
