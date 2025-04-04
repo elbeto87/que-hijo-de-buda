@@ -72,7 +72,7 @@ def emotions_detector(duration: int, topics: list, video_path: str = INPUT_VIDEO
             if not ret:
                 break
 
-            if not seconds_of_video < end_time:
+            if (not seconds_of_video <= end_time) and (topic_index < len(topics) - 1):
                 topic_index += 1
                 current_topic, start_time, end_time = get_new_topic(topics, index=topic_index)
 
