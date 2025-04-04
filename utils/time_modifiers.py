@@ -13,7 +13,3 @@ def to_seconds(time_str: str) -> int:
         return hours * 3600 + minutes * 60 + seconds
     else:
         raise ValueError("Invalid Format, this application supports mm:ss or hh:mm:ss")
-
-def get_new_topic(topics, index: int):
-    new_topic = topics[index]
-    return new_topic, to_seconds(new_topic["start_time"]), to_seconds(new_topic["end_time"])

@@ -57,9 +57,9 @@ class MultimediaHandler:
             "video_duration": "02:37",
             "number_of_topics": 3,
             "topics": [
-                {"start_time": "00:00", "end_time": "00:37", "topic": "Relaciones con Colombia y Venezuela"},
-                {"start_time": "00:38", "end_time": "01:34", "topic": "Posicionamiento sobre Estados Unidos e Israel"},
-                {"start_time": "01:35", "end_time": "02:37", "topic": "El Papa Francisco y cierre del reportaje"}
+                {"start_time": "00:00", "end_time": "00:37", "title": "Relaciones con Colombia y Venezuela"},
+                {"start_time": "00:38", "end_time": "01:34", "title": "Posicionamiento sobre Estados Unidos e Israel"},
+                {"start_time": "01:35", "end_time": "02:37", "title": "El Papa Francisco y cierre del reportaje"}
             ]
         }
 

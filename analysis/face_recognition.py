@@ -3,12 +3,13 @@ import os
 import cv2
 import torch
 import numpy as np
+from analysis.topic import Topic
 
 from constants import DATASET, INPUT_VIDEO, RESOURCES_FOLDER, OUTPUT_PROCESSED_VIDEO_PATH
 from analysis.emotions import face_emotions
 from facenet_pytorch import MTCNN, InceptionResnetV1
 from logger import logger
-from utils.time_modifiers import format_time, get_new_topic
+from utils.time_modifiers import format_time
 
 mtcnn = MTCNN(keep_all=True, device='cpu')
 resnet = InceptionResnetV1(pretrained='vggface2').eval()
@@ -43,7 +44,7 @@ def cosine_similarity(embedding1, embedding2):
     return np.dot(embedding1, embedding2.T) / (np.linalg.norm(embedding1) * np.linalg.norm(embedding2))
 
 
-def emotions_detector(duration: int, topics: list, video_path: str = INPUT_VIDEO):
+def emotions_detector(duration: int, topics: list[Topic], video_path: str = INPUT_VIDEO):
     cap = cv2.VideoCapture(RESOURCES_FOLDER+video_path)
     milei_embeddings = load_person_dataset()
 
@@ -60,8 +61,9 @@ def emotions_detector(duration: int, topics: list, video_path: str = INPUT_VIDEO
     # Define the codec and create VideoWriter object
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     output_video = cv2.VideoWriter(OUTPUT_PROCESSED_VIDEO_PATH, fourcc, fps, (frame_width, frame_height))
+
     topic_index = 0
-    current_topic, start_time, end_time = get_new_topic(topics, index=topic_index)
+    current_topic = topics[topic_index]
 
     while True and (not duration or frame_count < frame_limit):
         try:
@@ -72,12 +74,11 @@ def emotions_detector(duration: int, topics: list, video_path: str = INPUT_VIDEO
             if not ret:
                 break
 
-            if (not seconds_of_video <= end_time) and (topic_index < len(topics) - 1):
-                topic_index += 1
-                current_topic, start_time, end_time = get_new_topic(topics, index=topic_index)
+            if (not seconds_of_video <= current_topic.get_end_time()) and (topic_index < len(topics) - 1):
+                current_topic = topics[topic_index+1]
 
             rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            cv2.putText(frame, f"Topic: {current_topic['topic']}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
+            cv2.putText(frame, f"Topic: {current_topic.get_title()}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
             cv2.putText(frame, f"{format_time(seconds_of_video)}", (10, frame.shape[0] - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 0), 2)
             boxes, _ = mtcnn.detect(rgb_frame)
 
