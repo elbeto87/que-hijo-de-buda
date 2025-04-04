@@ -1,4 +1,5 @@
 from collections import defaultdict
+from pydoc_data.topics import topics
 
 from face_recognition import emotions_detector
 from multimedia_handler import MultimediaHandler
@@ -17,6 +18,6 @@ class VideoAnalysis:
         self.multimedia_handler.save_original_audio_and_transcription()
         self.audio_transcription = self.multimedia_handler.audio_transcription_to_text()
         self.topics = self.multimedia_handler.get_topics(self.audio_transcription)
-        emotions_detector(self.duration)
+        emotions_detector(duration=self.duration, topics=self.topics)
         self.multimedia_handler.save_process_video()
         self.multimedia_handler.remove_temporary_files()
