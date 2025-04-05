@@ -79,7 +79,12 @@ def emotions_detector(duration: int, topics: list[Topic], video_path: str = INPU
 
             rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             cv2.putText(frame, f"Topic: {current_topic.get_title()}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
-            cv2.putText(frame, f"{format_time(seconds_of_video)}", (10, frame.shape[0] - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 0), 2)
+            cv2.putText(frame, f"{format_time(seconds_of_video)}", (frame.shape[1] - 10 - cv2.getTextSize(f"{format_time(seconds_of_video)}", cv2.FONT_HERSHEY_SIMPLEX, 0.6, 2)[0][0], frame.shape[0] - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 0), 2)
+
+            for i, (emotion, value) in enumerate(current_topic.get_emotions_percentage().items()):
+                y_position = frame.shape[0] - 30 - (i * 20)
+                cv2.putText(frame, f"{emotion}: {value}%", (10, y_position), cv2.FONT_HERSHEY_SIMPLEX,0.6, (0, 255, 255), 2)
+
             boxes, _ = mtcnn.detect(rgb_frame)
 
             if boxes is not None:
@@ -109,7 +114,9 @@ def emotions_detector(duration: int, topics: list[Topic], video_path: str = INPU
                         logger.info(f"Frame {frame_count} - Target Person Detected ({percentage:.2f}%)")
                         label = f"Target Person Detected ({percentage:.2f}%)"
                         color = (0, 255, 0)
-                        label += face_emotions(face_rgb)
+                        emotion = face_emotions(face_rgb)
+                        label += f" | Mood: {emotion}"
+                        current_topic.add_new_frame_emotion(emotion)
                     else:
                         logger.info(f"Frame {frame_count} - No Target Person Detected ({percentage:.2f}%)")
                         label = f"No Target Person ({percentage:.2f}%)"
@@ -125,6 +132,10 @@ def emotions_detector(duration: int, topics: list[Topic], video_path: str = INPU
 
         except RuntimeError as e:
             logger.error(f"Frame {frame_count} - RuntimeError: {e}")
+            continue
+
+        except StopIteration as e:
+            logger.error(f"No emotion to be printed: {e}")
             continue
 
         finally:
