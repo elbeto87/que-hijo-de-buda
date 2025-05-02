@@ -47,7 +47,7 @@ python main https://<YOUTUBE_LINK>
 
 ## Demo Video
 
-[Watch the demo](https://www.youtube.com/watch?v=yGH6X3La9uw)
+[Watch the demo](https://www.youtube.com/watch?v=J4gcO87tRuc)
 
 ## License
 
